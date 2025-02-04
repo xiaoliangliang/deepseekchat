@@ -19,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/json.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
         // 初始化 highlight.js
@@ -126,6 +127,7 @@
             word-wrap: break-word;
             white-space: pre-wrap;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         .reasoning-content {
@@ -136,6 +138,7 @@
             padding: 12px;
             margin-bottom: 10px;
             position: relative;
+            padding-right: 40px; /* 为复制按钮留出空间 */
         }
 
         .reasoning-toggle {
@@ -769,6 +772,44 @@
         .mobile-header .el-button {
             color: #1f2937 !important; /* 改为深色 */
         }
+
+        /* 调整消息操作按钮位置 */
+        .message-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 2; /* 确保在最上层 */
+        }
+
+        .message-bubble:hover .message-actions {
+            opacity: 1;
+        }
+
+        .copy-button {
+            padding: 4px !important;
+            color: #4b5563 !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-button:hover {
+            background: #ffffff !important;
+            color: #4096ff !important;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-actions .el-button {
+            color: #1f2937 !important;
+        }
     </style>
 </head>
 <body>
@@ -812,9 +853,14 @@
                         <el-icon><Expand /></el-icon>
                     </button>
                     <h2>DeepSeek伴侣</h2>
-                    <el-button type="text" style="color: white" @click="showSettings = true">
-                        <el-icon><Setting /></el-icon>
-                    </el-button>
+                    <div class="header-actions">
+                        <el-button type="text" @click="exportToPDF" :disabled="!currentChat?.messages?.length">
+                            <el-icon><Download /></el-icon>
+                        </el-button>
+                        <el-button type="text" @click="showSettings = true">
+                            <el-icon><Setting /></el-icon>
+                        </el-button>
+                    </div>
                 </div>
                 <el-main class="message-list">
                     <template v-if="!apiKey">
@@ -873,9 +919,28 @@
                         </div>
                     </template>
                     <template v-else>
-                        <div v-for="(msg, index) in currentChat.messages" :key="index">
-                            <div class="message-bubble" :class="msg.role === 'user' ? 'user-message' : 'assistant-message'">
-                                <template v-if="msg.role === 'assistant' && msg.reasoning_content">
+                        <div v-for="(msg, index) in currentChat.messages" 
+                             :key="index" 
+                             class="message-bubble" 
+                             :class="msg.role === 'user' ? 'user-message' : 'assistant-message'">
+                            <!-- 复制按钮 -->
+                            <div class="message-actions" v-if="msg.role === 'assistant'">
+                                <el-button 
+                                    type="text" 
+                                    size="small" 
+                                    @click="copyMessage(msg.content)"
+                                    class="copy-button">
+                                    <el-icon><Document /></el-icon>
+                                </el-button>
+                            </div>
+                            
+                            <!-- 用户消息 -->
+                            <div v-if="msg.role === 'user'">{{ msg.content }}</div>
+                            
+                            <!-- AI消息 -->
+                            <template v-else>
+                                <!-- 思考过程放在前面 -->
+                                <template v-if="msg.reasoning_content">
                                     <div class="reasoning-content">
                                         <div class="reasoning-toggle" @click="toggleReasoning(index)">
                                             <el-icon>
@@ -888,9 +953,9 @@
                                         </div>
                                     </div>
                                 </template>
-                                <div v-if="msg.role === 'user'">{{ msg.content }}</div>
-                                <div v-else class="markdown-content" v-html="renderMarkdown(msg.content)"></div>
-                            </div>
+                                <!-- 实际回复内容放在后面 -->
+                                <div class="markdown-content" v-html="renderMarkdown(msg.content)"></div>
+                            </template>
                         </div>
                         <div v-if="isTyping" class="message-bubble assistant-message">
                             <div class="typing-indicator">
@@ -1029,7 +1094,8 @@
                     const newChat = {
                         id: Date.now(),
                         title: '新对话',
-                        messages: []
+                        messages: [],
+                        createdAt: new Date().toISOString()
                     }
                     this.chatHistory.unshift(newChat)
                     this.currentChatId = newChat.id
@@ -1092,7 +1158,8 @@
                         // 添加用户消息
                         const userMessage = {
                             role: 'user',
-                            content: message
+                            content: message,
+                            timestamp: new Date().toISOString()
                         }
                         this.currentChat.messages.push(userMessage)
 
@@ -1219,6 +1286,213 @@
                     } catch (error) {
                         console.error('Markdown 渲染错误:', error);
                         return content;
+                    }
+                },
+                async copyMessage(content) {
+                    try {
+                        await navigator.clipboard.writeText(content);
+                        this.$message({
+                            message: '复制成功',
+                            type: 'success',
+                            duration: 2000
+                        });
+                    } catch (err) {
+                        this.$message({
+                            message: '复制失败，请手动复制',
+                            type: 'error',
+                            duration: 2000
+                        });
+                    }
+                },
+                async exportToPDF() {
+                    try {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.className = 'export-content';
+                        
+                        // 添加聊天标题和时间
+                        const headerDiv = document.createElement('div');
+                        headerDiv.className = 'export-header';
+                        
+                        const titleDiv = document.createElement('h1');
+                        titleDiv.textContent = this.currentChat.title || '聊天记录';
+                        headerDiv.appendChild(titleDiv);
+                        
+                        const timeDiv = document.createElement('div');
+                        timeDiv.className = 'chat-time';
+                        const chatTime = new Date(this.currentChat.createdAt);
+                        timeDiv.textContent = `创建时间：${chatTime.toLocaleString('zh-CN')}`;
+                        headerDiv.appendChild(timeDiv);
+                        
+                        tempDiv.appendChild(headerDiv);
+
+                        // 添加每条消息
+                        this.currentChat.messages.forEach(msg => {
+                            const msgDiv = document.createElement('div');
+                            msgDiv.className = `export-message ${msg.role}`;
+                            
+                            // 添加角色标签和时间
+                            const msgHeader = document.createElement('div');
+                            msgHeader.className = 'message-header';
+                            
+                            const roleLabel = document.createElement('div');
+                            roleLabel.className = 'role-label';
+                            roleLabel.textContent = msg.role === 'user' ? '用户' : this.model;
+                            msgHeader.appendChild(roleLabel);
+                            
+                            const timeLabel = document.createElement('div');
+                            timeLabel.className = 'time-label';
+                            const msgTime = new Date(msg.timestamp);
+                            timeLabel.textContent = msgTime.toLocaleString('zh-CN');
+                            msgHeader.appendChild(timeLabel);
+                            
+                            msgDiv.appendChild(msgHeader);
+
+                            // 添加消息内容
+                            const contentDiv = document.createElement('div');
+                            contentDiv.className = 'content';
+                            contentDiv.innerHTML = msg.role === 'user' ? 
+                                msg.content : this.renderMarkdown(msg.content);
+                            msgDiv.appendChild(contentDiv);
+
+                            // 添加思考过程（如果有）
+                            if (msg.role === 'assistant' && msg.reasoning_content) {
+                                const reasoningDiv = document.createElement('div');
+                                reasoningDiv.className = 'reasoning-content';
+                                reasoningDiv.innerHTML = `
+                                    <div class="reasoning-label">思考过程：</div>
+                                    <div class="reasoning-body">${msg.reasoning_content}</div>
+                                `;
+                                msgDiv.appendChild(reasoningDiv);
+                            }
+
+                            tempDiv.appendChild(msgDiv);
+                        });
+
+                        // 更新导出样式
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            .export-content {
+                                padding: 20px;
+                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                            }
+                            .export-header {
+                                margin-bottom: 20px;
+                            }
+                            .chat-time {
+                                color: #666;
+                                font-size: 14px;
+                                margin-top: 5px;
+                            }
+                            .export-message {
+                                margin: 15px 0;
+                                padding: 15px;
+                                border-radius: 8px;
+                            }
+                            .message-header {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                margin-bottom: 8px;
+                            }
+                            .role-label {
+                                font-weight: bold;
+                                color: #4b5563;
+                            }
+                            .time-label {
+                                font-size: 12px;
+                                color: #666;
+                            }
+                            .export-message.user {
+                                background: #f3f4f6;
+                            }
+                            .export-message.assistant {
+                                background: #f8fafc;
+                            }
+                            .content {
+                                white-space: pre-wrap;
+                                margin-bottom: 10px;
+                            }
+                            .reasoning-content {
+                                margin-top: 10px;
+                                padding: 10px;
+                                background: #f3f4f6;
+                                border-radius: 6px;
+                            }
+                            .reasoning-label {
+                                font-weight: 500;
+                                color: #4b5563;
+                                margin-bottom: 5px;
+                            }
+                            .reasoning-body {
+                                white-space: pre-wrap;
+                                color: #666;
+                            }
+                            * {
+                                -webkit-print-color-adjust: exact !important;
+                                color-adjust: exact !important;
+                                print-color-adjust: exact !important;
+                            }
+                            .export-content {
+                                -webkit-user-select: text !important;
+                                user-select: text !important;
+                            }
+                            .export-message {
+                                position: relative;
+                                z-index: 1;
+                            }
+                            .content, .reasoning-body {
+                                position: relative;
+                                z-index: 2;
+                            }
+                        `;
+                        tempDiv.appendChild(style);
+
+                        // 生成PDF
+                        const opt = {
+                            margin: 10,
+                            filename: `${this.currentChat.title || '聊天记录'}.pdf`,
+                            image: { type: 'jpeg', quality: 0.98 },
+                            html2canvas: { 
+                                scale: 2,
+                                useCORS: true,
+                                logging: false
+                            },
+                            jsPDF: { 
+                                unit: 'mm', 
+                                format: 'a4', 
+                                orientation: 'portrait'
+                            },
+                            enableLinks: true,
+                            pagebreak: { mode: 'avoid-all' },
+                            html2canvas: {
+                                scale: 2,
+                                useCORS: true,
+                                letterRendering: true
+                            },
+                            jsPDF: {
+                                unit: 'mm',
+                                format: 'a4',
+                                orientation: 'portrait',
+                                putTotalPages: true
+                            }
+                        };
+
+                        document.body.appendChild(tempDiv);
+                        await html2pdf().set(opt).from(tempDiv).save();
+                        document.body.removeChild(tempDiv);
+
+                        this.$message({
+                            message: 'PDF导出成功',
+                            type: 'success',
+                            duration: 2000
+                        });
+                    } catch (error) {
+                        console.error('PDF导出失败:', error);
+                        this.$message({
+                            message: 'PDF导出失败',
+                            type: 'error',
+                            duration: 2000
+                        });
                     }
                 }
             }
