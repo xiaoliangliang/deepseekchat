@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeepSeek伴侣 - AI进化论-花生 出品</title>
+    
+    <!-- 添加 favicon -->
+    <link rel="icon" type="image/png" href="@image.png">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-54EMVJZVN9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-54EMVJZVN9');
+    </script>
+
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
     <script src="https://unpkg.com/element-plus"></script>
@@ -852,7 +866,10 @@
                     <button class="menu-button" @click="showSidebar = true">
                         <el-icon><Expand /></el-icon>
                     </button>
-                    <h2>DeepSeek伴侣</h2>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <img src="@image.png" alt="Logo" style="width: 24px; height: 24px;">
+                        <h2>DeepSeek伴侣</h2>
+                    </div>
                     <div class="header-actions">
                         <el-button type="text" @click="exportToPDF" :disabled="!currentChat?.messages?.length">
                             <el-icon><Download /></el-icon>
@@ -906,7 +923,7 @@
                     <template v-else-if="!currentChat?.messages?.length">
                         <div class="empty-state">
                             <div class="empty-state-icon">
-                                <el-icon><ChatRound /></el-icon>
+                                <img src="@image.png" alt="Logo" style="width: 48px; height: 48px; margin-bottom: 16px;">
                             </div>
                             <h3 class="empty-state-title">开始新的对话</h3>
                             <p class="empty-state-description">
