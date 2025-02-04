@@ -403,16 +403,16 @@
             background: white;
         }
 
-        /* Markdown 内容样式 */
+        /* Markdown 内容样式优化 */
         .markdown-content {
             font-size: 1em;
             line-height: 1.5;
-            color: #e2e8f0;
-            background: transparent;
+            color: var(--text-primary);
             padding: 0.8em;
             border-radius: 8px;
         }
 
+        /* 标题样式优化 */
         .markdown-content h1,
         .markdown-content h2,
         .markdown-content h3,
@@ -420,89 +420,117 @@
         .markdown-content h5,
         .markdown-content h6 {
             margin-top: 1.2em;
-            margin-bottom: 0.8em;
+            margin-bottom: 0.4em;  /* 减小标题下方间距 */
             font-weight: 600;
             line-height: 1.25;
+            color: var(--text-primary);
         }
 
-        .markdown-content h1 { font-size: 1.8em; }
-        .markdown-content h2 { font-size: 1.4em; }
-        .markdown-content h3 { font-size: 1.2em; }
-        .markdown-content h4 { font-size: 1em; }
-
+        /* 段落样式优化 */
         .markdown-content p {
-            margin: 0.6em 0;
-            line-height: 1.5;
+            margin: 0.3em 0;      /* 减小段落间距 */
+            line-height: 1.5;     /* 调整行高 */
         }
 
+        /* 列表样式优化 */
         .markdown-content ul,
         .markdown-content ol {
             padding-left: 1.5em;
-            margin: 0.6em 0;
+            margin: 0.3em 0;      /* 减小列表外边距 */
         }
 
         .markdown-content li {
-            margin: 0.3em 0;
-            line-height: 1.5;
+            margin: 0.15em 0;     /* 减小列表项间距 */
+            line-height: 1.4;     /* 稍微减小列表行高 */
         }
 
-        .markdown-content pre {
-            margin: 0.8em 0;
-            padding: 12px;
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-        }
-
-        .markdown-content pre code {
-            line-height: 1.4;
-        }
-
-        .markdown-content blockquote {
-            margin: 0.8em 0;
-            padding: 0.4em 1em;
-        }
-
-        /* 代码相关样式优化 */
-        .markdown-content code {
-            font-size: 0.92em;
-            padding: 0.2em 0.4em;
-            margin: 0 0.2em;
-            border-radius: 4px;
-            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
-        }
-
-        /* 表格样式优化 */
-        .markdown-content table {
-            margin: 0.8em 0;
-        }
-
-        .markdown-content table th,
-        .markdown-content table td {
-            padding: 6px 10px;
-            line-height: 1.4;
-        }
-
-        /* 列表嵌套优化 */
+        /* 嵌套列表优化 */
         .markdown-content ul ul,
         .markdown-content ul ol,
         .markdown-content ol ul,
         .markdown-content ol ol {
-            margin: 0.2em 0;
+            margin: 0.1em 0 0.1em 0.8em;  /* 减小嵌套列表间距 */
         }
 
-        /* 段落间距优化 */
+        /* 代码块样式优化 */
+        .markdown-content pre {
+            margin: 0.5em 0;      /* 减小代码块外边距 */
+            padding: 0.8em;
+            background: var(--element-bg);
+            border-radius: 12px;
+            box-shadow: var(--neumorphic-inset);
+        }
+
+        .markdown-content pre code {
+            line-height: 1.4;     /* 调整代码块行高 */
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        }
+
+        /* 行内代码样式 */
+        .markdown-content code {
+            font-size: 0.92em;
+            padding: 0.2em 0.4em;
+            margin: 0 0.2em;
+            border-radius: 6px;
+            background: var(--element-bg);
+            color: var(--accent-color);
+            box-shadow: var(--neumorphic-inset);
+        }
+
+        /* 引用块样式 */
+        .markdown-content blockquote {
+            margin: 0.5em 0;      /* 减小引用块外边距 */
+            padding: 0.3em 0.8em;
+            border-left: 3px solid var(--accent-color);
+            background: var(--element-bg);
+            border-radius: 8px;
+            box-shadow: var(--neumorphic-inset);
+        }
+
+        /* 表格样式 */
+        .markdown-content table {
+            margin: 0.5em 0;      /* 减小表格外边距 */
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            background: var(--element-bg);
+            border-radius: 12px;
+            box-shadow: var(--neumorphic-shadow);
+        }
+
+        .markdown-content table th,
+        .markdown-content table td {
+            padding: 0.4em 0.6em;
+            border: none;
+            line-height: 1.4;
+        }
+
+        .markdown-content table th {
+            font-weight: 600;
+            background: rgba(74, 140, 255, 0.1);
+        }
+
+        /* 水平线样式 */
+        .markdown-content hr {
+            margin: 0.8em 0;
+            border: none;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--shadow-dark),
+                transparent
+            );
+        }
+
+        /* 相邻元素间距优化 */
         .markdown-content * + p {
-            margin-top: 0.6em;
+            margin-top: 0.3em;    /* 减小段落前的间距 */
         }
 
-        /* 代码块和普通文本之间的间距 */
         .markdown-content p + pre,
         .markdown-content pre + p {
-            margin-top: 0.8em;
+            margin-top: 0.5em;    /* 调整代码块与文本之间的间距 */
         }
 
         /* 移动端输入框优化 */
