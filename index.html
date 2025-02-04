@@ -84,7 +84,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: #0f172a; /* 深色背景 */
+            background: #f5f7fa; /* 更改为浅色背景 */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
@@ -96,6 +96,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
 
         @media (min-width: 768px) {
@@ -112,7 +113,7 @@
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background: #f8fafc;
+            background: #ffffff; /* 更改为白色背景 */
             -webkit-overflow-scrolling: touch;
         }
 
@@ -163,16 +164,16 @@
         }
 
         .user-message {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            background: #4096ff; /* 更改为更柔和的蓝色 */
             color: white;
             margin-left: auto;
             border-bottom-right-radius: 5px;
         }
 
         .assistant-message {
-            background: #1e293b;
-            color: #e2e8f0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #f5f7fa; /* 更改为浅灰色背景 */
+            color: #1f2937; /* 更改为深色文字 */
+            border: 1px solid #e5e7eb;
             border-bottom-left-radius: 5px;
         }
 
@@ -194,8 +195,8 @@
         }
 
         .input-footer {
-            background: #1e293b;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff; /* 更改为白色背景 */
+            border-top: 1px solid #e5e7eb;
             padding: 15px;
         }
 
@@ -238,7 +239,7 @@
             top: 0;
             z-index: 100;
             padding: 0 15px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
+            background: #ffffff; /* 更改为白色背景 */
             color: white;
             height: 56px;
             display: flex;
@@ -246,16 +247,14 @@
             justify-content: space-between;
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .mobile-header h2 {
             margin: 0;
             font-size: 18px;
             font-weight: 600;
-            background: linear-gradient(90deg, #60a5fa, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1f2937; /* 改为深色文字 */
         }
 
         .app-container {
@@ -266,8 +265,8 @@
 
         .sidebar {
             width: 260px;
-            background: #1e293b;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff; /* 更改为白色背景 */
+            border-right: 1px solid #e5e7eb;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -324,14 +323,15 @@
             align-items: center;
             gap: 8px;
             background: transparent;
+            color: #1f2937; /* 更改为深色文字 */
         }
 
         .chat-item:hover {
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(64, 150, 255, 0.1);
         }
 
         .chat-item.active {
-            background: rgba(59, 130, 246, 0.2);
+            background: rgba(64, 150, 255, 0.15);
         }
 
         .chat-item-title {
@@ -339,7 +339,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: #e2e8f0;
+            color: #1f2937; /* 改为深色文字 */
         }
 
         .main-content {
@@ -351,7 +351,7 @@
 
         .menu-button {
             font-size: 24px;
-            color: white;
+            color: #1f2937; /* 改为深色 */
             background: none;
             border: none;
             padding: 8px;
@@ -371,7 +371,7 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: #94a3b8;
+            color: #1f2937; /* 改为深色文字 */
             text-align: center;
             padding: 20px;
         }
@@ -385,13 +385,14 @@
         .empty-state-title {
             font-size: 24px;
             margin-bottom: 8px;
-            color: #e2e8f0;
+            color: #1f2937; /* 改为深色文字 */
             font-weight: 600;
         }
 
         .empty-state-description {
             max-width: 400px;
             margin-bottom: 24px;
+            color: #4b5563; /* 稍微浅一点的深色 */
         }
 
         .footer {
@@ -580,7 +581,7 @@
             top: 0;
             z-index: 100;
             padding: 0 15px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
+            background: #ffffff; /* 更改为白色背景 */
             color: white;
             height: 56px;
             display: flex;
@@ -588,16 +589,14 @@
             justify-content: space-between;
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .mobile-header h2 {
             margin: 0;
             font-size: 18px;
             font-weight: 600;
-            background: linear-gradient(90deg, #60a5fa, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1f2937; /* 改为深色文字 */
         }
 
         /* 菜单按钮优化 */
@@ -712,6 +711,24 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #475569;
         }
+
+        /* 修改新对话按钮的样式 */
+        .sidebar-header .el-button {
+            background: #4096ff;
+            border-color: #4096ff;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .sidebar-header .el-button:hover {
+            background: #1677ff;
+            border-color: #1677ff;
+        }
+
+        /* 修改设置按钮颜色 */
+        .mobile-header .el-button {
+            color: #1f2937 !important; /* 改为深色 */
+        }
     </style>
 </head>
 <body>
@@ -752,9 +769,9 @@
             <div class="main-content">
                 <div class="mobile-header">
                     <button class="menu-button" @click="showSidebar = true">
-                        <el-icon><Menu /></el-icon>
+                        <el-icon><Expand /></el-icon>
                     </button>
-                    <h2>DeepSeek伴侣 Created by AI进化论-花生</h2>
+                    <h2>DeepSeek伴侣</h2>
                     <el-button type="text" style="color: white" @click="showSettings = true">
                         <el-icon><Setting /></el-icon>
                     </el-button>
@@ -763,12 +780,41 @@
                     <template v-if="!apiKey">
                         <div style="text-align: center; padding: 20px;">
                             <el-alert
-                                title="请先设置API Key"
                                 type="info"
-                                description="请前往硅基流动 <a href='https://cloud.siliconflow.cn/i/FuAPK085' target='_blank'>https://cloud.siliconflow.cn/i/FuAPK085</a> 获取你的APIKey，新注册用户有14元免费额度。点击右上角设置按钮配置您的API Key"
-                                show-icon
                                 :closable="false"
-                            />
+                                show-icon>
+                                <template #title>
+                                    <div style="font-size: 16px; margin-bottom: 8px; color: #1f2937;">
+                                        请先设置API Key
+                                    </div>
+                                </template>
+                                <template #default>
+                                    <div style="color: #4b5563; line-height: 1.6;">
+                                        请前往硅基流动 
+                                        <a 
+                                            href='https://cloud.siliconflow.cn/i/FuAPK085' 
+                                            target='_blank'
+                                            style="color: #4096ff; text-decoration: none;"
+                                            onmouseover="this.style.textDecoration='underline'"
+                                            onmouseout="this.style.textDecoration='none'"
+                                        >
+                                            https://cloud.siliconflow.cn/i/FuAPK085
+                                        </a> 
+                                        获取你的APIKey，新注册用户有14元免费额度。
+                                        <br>
+                                        点击右上角
+                                        <el-button 
+                                            type="text" 
+                                            style="color: #4096ff; padding: 0 4px;"
+                                            @click="showSettings = true"
+                                        >
+                                            <el-icon><Setting /></el-icon>
+                                            设置
+                                        </el-button>
+                                        按钮配置您的API Key
+                                    </div>
+                                </template>
+                            </el-alert>
                         </div>
                     </template>
                     <template v-else-if="!currentChat?.messages?.length">
@@ -983,6 +1029,14 @@
                         !this.currentChat.messages[index].isReasoningCollapsed;
                     this.saveChatHistory();
                 },
+                scrollToBottom() {
+                    this.$nextTick(() => {
+                        const container = document.querySelector('.message-list');
+                        if (container) {
+                            container.scrollTop = container.scrollHeight;
+                        }
+                    });
+                },
                 async sendMessage() {
                     if (!this.inputMessage.trim() || this.isLoading || !this.apiKey) return
 
@@ -1089,8 +1143,9 @@
                                         currentMessage.content += data.choices[0].delta.content || ''
                                     }
 
-                                    // 强制更新视图
+                                    // 强制更新视图并滚动到底部
                                     this.currentChat.messages = [...this.currentChat.messages]
+                                    this.scrollToBottom();
                                 } catch (error) {
                                     console.error('数据解析错误:', error, '原始数据:', line)
                                 }
