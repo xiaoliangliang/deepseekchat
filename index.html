@@ -84,7 +84,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: #f0f2f5;
+            background: #0f172a; /* 深色背景 */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
@@ -124,6 +124,7 @@
             animation: fadeIn 0.3s ease-in;
             word-wrap: break-word;
             white-space: pre-wrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .reasoning-content {
@@ -162,16 +163,16 @@
         }
 
         .user-message {
-            background: #3b82f6;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             margin-left: auto;
             border-bottom-right-radius: 5px;
         }
 
         .assistant-message {
-            background: #ffffff;
-            color: #1e293b;
-            border: 1px solid #e2e8f0;
+            background: #1e293b;
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom-left-radius: 5px;
         }
 
@@ -193,9 +194,9 @@
         }
 
         .input-footer {
+            background: #1e293b;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding: 15px;
-            background: #ffffff;
-            border-top: 1px solid #e2e8f0;
         }
 
         .settings-drawer {
@@ -222,23 +223,39 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px) }
-            to { opacity: 1; transform: translateY(0) }
+            from { 
+                opacity: 0; 
+                transform: translateY(10px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
         }
 
         .mobile-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
             padding: 0 15px;
-            background: #3b82f6;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
             color: white;
-            height: 60px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .mobile-header h2 {
             margin: 0;
-            font-size: 1.2rem;
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #60a5fa, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .app-container {
@@ -249,8 +266,8 @@
 
         .sidebar {
             width: 260px;
-            background: #ffffff;
-            border-right: 1px solid #e2e8f0;
+            background: #1e293b;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -300,20 +317,21 @@
         .chat-item {
             padding: 12px;
             margin-bottom: 8px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 8px;
+            background: transparent;
         }
 
         .chat-item:hover {
-            background-color: #f1f5f9;
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .chat-item.active {
-            background-color: #e2e8f0;
+            background: rgba(59, 130, 246, 0.2);
         }
 
         .chat-item-title {
@@ -321,6 +339,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            color: #e2e8f0;
         }
 
         .main-content {
@@ -352,7 +371,7 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: #64748b;
+            color: #94a3b8;
             text-align: center;
             padding: 20px;
         }
@@ -360,13 +379,14 @@
         .empty-state-icon {
             font-size: 48px;
             margin-bottom: 16px;
-            color: #94a3b8;
+            color: #3b82f6;
         }
 
         .empty-state-title {
             font-size: 24px;
             margin-bottom: 8px;
-            color: #1e293b;
+            color: #e2e8f0;
+            font-weight: 600;
         }
 
         .empty-state-description {
@@ -387,8 +407,8 @@
         .markdown-content {
             font-size: 1em;
             line-height: 1.5;
-            color: #1e293b;
-            background: #ffffff;
+            color: #e2e8f0;
+            background: transparent;
             padding: 0.8em;
             border-radius: 8px;
         }
@@ -429,6 +449,9 @@
         .markdown-content pre {
             margin: 0.8em 0;
             padding: 12px;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
         }
 
         .markdown-content pre code {
@@ -447,6 +470,9 @@
             margin: 0 0.2em;
             border-radius: 4px;
             font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
         }
 
         /* 表格样式优化 */
@@ -477,6 +503,186 @@
         .markdown-content p + pre,
         .markdown-content pre + p {
             margin-top: 0.8em;
+        }
+
+        /* 移动端输入框优化 */
+        @media (max-width: 768px) {
+            .input-footer {
+                position: sticky;
+                bottom: 0;
+                background: rgba(30, 41, 59, 0.9);
+                padding: 10px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                z-index: 10;
+            }
+
+            .el-textarea__inner {
+                min-height: 44px !important;
+                line-height: 1.5;
+                font-size: 16px !important; /* 防止iOS自动缩放 */
+                padding: 10px 12px;
+                background: #0f172a !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                color: #e2e8f0 !important;
+                border-radius: 12px !important;
+                transition: all 0.3s ease;
+            }
+
+            .el-textarea__inner:focus {
+                border-color: #3b82f6 !important;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+            }
+
+            /* 发送按钮优化 */
+            .input-footer .el-button {
+                height: 44px !important;
+                padding: 0 15px;
+                font-size: 16px;
+            }
+
+            /* 消息列表底部留白，防止被输入框遮挡 */
+            .message-list {
+                padding-bottom: 80px;
+            }
+        }
+
+        /* 移动端顶部导航栏优化 */
+        .mobile-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0 15px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #60a5fa, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 菜单按钮优化 */
+        .menu-button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .menu-button:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-button .el-icon {
+            font-size: 24px;
+        }
+
+        /* 侧边栏优化 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 280px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            /* 侧边栏动画优化 */
+            .sidebar-overlay {
+                transition: opacity 0.3s ease;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .sidebar-overlay.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+
+        /* 消息气泡优化 */
+        @media (max-width: 768px) {
+            .message-bubble {
+                max-width: 88%;
+                padding: 12px 14px;
+                margin: 8px 0;
+            }
+
+            .user-message {
+                margin-left: auto;
+                margin-right: 8px;
+            }
+
+            .assistant-message {
+                margin-left: 8px;
+                margin-right: auto;
+            }
+        }
+
+        /* 设置抽屉优化 */
+        @media (max-width: 768px) {
+            .el-drawer {
+                width: 100% !important;
+            }
+
+            .settings-drawer {
+                padding: 16px;
+            }
+        }
+
+        /* 软键盘弹出时的处理 */
+        @media (max-width: 768px) {
+            .app-container {
+                height: 100%;
+                min-height: 100vh;
+            }
+
+            .chat-container {
+                height: 100%;
+                min-height: 100vh;
+            }
+
+            /* 防止iOS橡皮筋效果 */
+            .message-list {
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
+            }
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
         }
     </style>
 </head>
