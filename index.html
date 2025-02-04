@@ -536,24 +536,47 @@
 
         /* 修改移动端输入框样式 */
         @media (max-width: 768px) {
-            /* 确保主内容区域可以滚动且不被输入框遮挡 */
+            /* 主内容区域布局 */
             .main-content {
-                position: relative;
-                height: 100vh;
-                height: -webkit-fill-available; /* 适配 iOS Safari */
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 display: flex;
                 flex-direction: column;
+                height: 100%;
             }
 
-            /* 消息列表区域可滚动 */
+            /* 固定顶部导航栏 */
+            .mobile-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                background: #ffffff;
+                height: 56px;
+                padding: 0 15px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid #e5e7eb;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            /* 消息列表区域 */
             .message-list {
                 flex: 1;
                 overflow-y: auto;
-                padding-bottom: 120px; /* 留出输入框的空间 */
+                margin-top: 56px; /* 为顶部导航栏留出空间 */
+                margin-bottom: 64px; /* 为底部输入框留出空间 */
+                padding: 20px;
                 -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
             }
 
-            /* 输入框固定在底部 */
+            /* 固定底部输入框 */
             .input-footer {
                 position: fixed;
                 bottom: 0;
@@ -563,15 +586,21 @@
                 padding: 10px;
                 border-top: 1px solid #e5e7eb;
                 z-index: 1000;
-                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* 添加阴影效果 */
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
             }
 
-            /* 处理软键盘弹出时的情况 */
-            @supports (-webkit-touch-callout: none) {
-                .main-content {
-                    padding-bottom: env(safe-area-inset-bottom);
+            /* 处理 iOS 安全区域 */
+            @supports (padding-top: env(safe-area-inset-top)) {
+                .mobile-header {
+                    padding-top: env(safe-area-inset-top);
+                    height: calc(56px + env(safe-area-inset-top));
                 }
-                
+
+                .message-list {
+                    margin-top: calc(56px + env(safe-area-inset-top));
+                    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+                }
+
                 .input-footer {
                     padding-bottom: calc(10px + env(safe-area-inset-bottom));
                 }
@@ -608,30 +637,6 @@
             .input-footer {
                 max-width: 1200px;
             }
-        }
-
-        /* 移动端顶部导航栏优化 */
-        .mobile-header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 0 15px;
-            background: #ffffff; /* 更改为白色背景 */
-            color: white;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .mobile-header h2 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937; /* 改为深色文字 */
         }
 
         /* 菜单按钮优化 */
