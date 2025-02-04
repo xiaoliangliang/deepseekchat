@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek伴侣 - AI进化论-花生 出品</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <script src="https://unpkg.com/element-plus"></script>
+    <script src="https://unpkg.com/@element-plus/icons-vue@2.1.0/dist/index.iife.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/lib/marked.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/swift.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/markdown.min.js"></script>
+
+    <script>
+        // 初始化 highlight.js
+        hljs.configure({
+            ignoreUnescapedHTML: true
+        });
+
+        // 初始化 marked
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof marked === 'undefined') {
+                console.error('Marked library not loaded');
+                return;
+            }
+
+            // 创建渲染器
+            const renderer = new marked.Renderer();
+            
+            // 自定义表格渲染
+            renderer.table = function(header, body) {
+                return '<div class="table-container"><table>\n'
+                    + '<thead>\n'
+                    + header
+                    + '</thead>\n'
+                    + '<tbody>\n'
+                    + body
+                    + '</tbody>\n'
+                    + '</table></div>\n';
+            };
+
+            // 自定义代码块渲染
+            renderer.code = function(code, language) {
+                const validLanguage = hljs.getLanguage(language) ? language : 'plaintext';
+                const highlighted = hljs.highlight(code, { language: validLanguage }).value;
+                return `<pre><code class="hljs language-${validLanguage}">${highlighted}</code></pre>`;
+            };
+
+            // 配置 marked
+            marked.setOptions({
+                renderer: renderer,
+                gfm: true,
+                breaks: true,
+                pedantic: false,
+                sanitize: false,
+                smartLists: true,
+                smartypants: true,
+                xhtml: false,
+                highlight: function(code, lang) {
+                    if (lang && hljs.getLanguage(lang)) {
+                        try {
+                            return hljs.highlight(code, { language: lang }).value;
+                        } catch (__) {}
+                    }
+                    return hljs.highlightAuto(code).value;
+                }
+            });
+
+            // 设置全局标志
+            window.markedInitialized = true;
+        });
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .chat-container {
+            max-width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+            background: #ffffff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .chat-container {
+                max-width: 1200px;
+                height: 100vh;
+                margin: 0 auto;
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        .message-list {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .message-bubble {
+            max-width: 85%;
+            margin: 10px 0;
+            padding: 12px 16px;
+            border-radius: 15px;
+            animation: fadeIn 0.3s ease-in;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .reasoning-content {
+            font-size: 0.9em;
+            color: #666;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .reasoning-toggle {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            cursor: pointer;
+            color: #94a3b8;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .reasoning-toggle:hover {
+            background-color: #e2e8f0;
+        }
+
+        .reasoning-body {
+            margin-top: 4px;
+            transition: max-height 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .reasoning-body.collapsed {
+            max-height: 0;
+        }
+
+        .user-message {
+            background: #3b82f6;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .assistant-message {
+            background: #ffffff;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 5px;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            padding: 8px 12px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            margin: 0 2px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+
+        .input-footer {
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .settings-drawer {
+            padding: 20px;
+        }
+
+        .api-key-input {
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .message-bubble {
+                max-width: 90%;
+            }
+
+            .input-footer {
+                padding: 10px;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0) }
+            40% { transform: translateY(-4px) }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) }
+            to { opacity: 1; transform: translateY(0) }
+        }
+
+        .mobile-header {
+            padding: 0 15px;
+            background: #3b82f6;
+            color: white;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mobile-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            background: #f0f2f5;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 0;
+                bottom: 0;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                display: none;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .chat-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .chat-item.active {
+            background-color: #e2e8f0;
+        }
+
+        .chat-item-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .menu-button {
+            font-size: 24px;
+            color: white;
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .menu-button {
+                display: block;
+            }
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #64748b;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #94a3b8;
+        }
+
+        .empty-state-title {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .empty-state-description {
+            max-width: 400px;
+            margin-bottom: 24px;
+        }
+
+        .footer {
+            padding: 16px;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        /* Markdown 内容样式 */
+        .markdown-content {
+            font-size: 1em;
+            line-height: 1.5;
+            color: #1e293b;
+            background: #ffffff;
+            padding: 0.8em;
+            border-radius: 8px;
+        }
+
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3,
+        .markdown-content h4,
+        .markdown-content h5,
+        .markdown-content h6 {
+            margin-top: 1.2em;
+            margin-bottom: 0.8em;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .markdown-content h1 { font-size: 1.8em; }
+        .markdown-content h2 { font-size: 1.4em; }
+        .markdown-content h3 { font-size: 1.2em; }
+        .markdown-content h4 { font-size: 1em; }
+
+        .markdown-content p {
+            margin: 0.6em 0;
+            line-height: 1.5;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            padding-left: 1.5em;
+            margin: 0.6em 0;
+        }
+
+        .markdown-content li {
+            margin: 0.3em 0;
+            line-height: 1.5;
+        }
+
+        .markdown-content pre {
+            margin: 0.8em 0;
+            padding: 12px;
+        }
+
+        .markdown-content pre code {
+            line-height: 1.4;
+        }
+
+        .markdown-content blockquote {
+            margin: 0.8em 0;
+            padding: 0.4em 1em;
+        }
+
+        /* 代码相关样式优化 */
+        .markdown-content code {
+            font-size: 0.92em;
+            padding: 0.2em 0.4em;
+            margin: 0 0.2em;
+            border-radius: 4px;
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        }
+
+        /* 表格样式优化 */
+        .markdown-content table {
+            margin: 0.8em 0;
+        }
+
+        .markdown-content table th,
+        .markdown-content table td {
+            padding: 6px 10px;
+            line-height: 1.4;
+        }
+
+        /* 列表嵌套优化 */
+        .markdown-content ul ul,
+        .markdown-content ul ol,
+        .markdown-content ol ul,
+        .markdown-content ol ol {
+            margin: 0.2em 0;
+        }
+
+        /* 段落间距优化 */
+        .markdown-content * + p {
+            margin-top: 0.6em;
+        }
+
+        /* 代码块和普通文本之间的间距 */
+        .markdown-content p + pre,
+        .markdown-content pre + p {
+            margin-top: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="app-container">
+            <!-- 侧边栏 -->
+            <div class="sidebar" :class="{ show: showSidebar }">
+                <div class="sidebar-header">
+                    <el-button type="primary" style="width: 100%" @click="createNewChat">
+                        <el-icon><Plus /></el-icon> 新对话
+                    </el-button>
+                </div>
+                <div class="chat-list">
+                    <div v-for="chat in chatHistory" 
+                         :key="chat.id" 
+                         class="chat-item"
+                         :class="{ active: currentChatId === chat.id }"
+                         @click="switchChat(chat.id)">
+                        <el-icon><ChatRound /></el-icon>
+                        <span class="chat-item-title">{{ chat.title || '新对话' }}</span>
+                        <el-button 
+                            v-if="currentChatId === chat.id"
+                            type="text"
+                            @click.stop="deleteChat(chat.id)">
+                            <el-icon><Delete /></el-icon>
+                        </el-button>
+                    </div>
+                </div>
+                <div class="footer">
+                    <span>DeepSeek伴侣 v1.0</span><br>
+                    <span>© 2024 All Rights Reserved</span>
+                </div>
+            </div>
+
+            <!-- 移动端遮罩 -->
+            <div class="sidebar-overlay" 
+                 :class="{ show: showSidebar }" 
+                 @click="showSidebar = false">
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="main-content">
+                <div class="mobile-header">
+                    <button class="menu-button" @click="showSidebar = true">
+                        <el-icon><Menu /></el-icon>
+                    </button>
+                    <h2>DeepSeek伴侣</h2>
+                    <el-button type="text" style="color: white" @click="showSettings = true">
+                        <el-icon><Setting /></el-icon>
+                    </el-button>
+                </div>
+
+                <el-main class="message-list">
+                    <template v-if="!apiKey">
+                        <div style="text-align: center; padding: 20px;">
+                            <el-alert
+                                title="请先设置API Key"
+                                type="info"
+                                description="点击右上角设置按钮配置您的API Key"
+                                show-icon
+                                :closable="false"
+                            />
+                        </div>
+                    </template>
+                    <template v-else-if="!currentChat?.messages?.length">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <el-icon><ChatRound /></el-icon>
+                            </div>
+                            <h3 class="empty-state-title">开始新的对话</h3>
+                            <p class="empty-state-description">
+                                我是您的AI助手，可以帮助您解答问题、编写代码、分析数据等。
+                                让我们开始对话吧！
+                            </p>
+                            <el-button type="primary" @click="focusInput">
+                                开始对话
+                            </el-button>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div v-for="(msg, index) in currentChat.messages" :key="index">
+                            <div class="message-bubble" :class="msg.role === 'user' ? 'user-message' : 'assistant-message'">
+                                <template v-if="msg.role === 'assistant' && msg.reasoning_content">
+                                    <div class="reasoning-content">
+                                        <div class="reasoning-toggle" @click="toggleReasoning(index)">
+                                            <el-icon>
+                                                <component :is="msg.isReasoningCollapsed ? 'ArrowRight' : 'ArrowDown'" />
+                                            </el-icon>
+                                        </div>
+                                        <div>思考过程：</div>
+                                        <div class="reasoning-body" :class="{ collapsed: msg.isReasoningCollapsed }">
+                                            {{ msg.reasoning_content }}
+                                        </div>
+                                    </div>
+                                </template>
+                                <div v-if="msg.role === 'user'">{{ msg.content }}</div>
+                                <div v-else class="markdown-content" v-html="renderMarkdown(msg.content)"></div>
+                            </div>
+                        </div>
+                        <div v-if="isTyping" class="message-bubble assistant-message">
+                            <div class="typing-indicator">
+                                <div class="dot" style="animation-delay: 0s"></div>
+                                <div class="dot" style="animation-delay: 0.2s"></div>
+                                <div class="dot" style="animation-delay: 0.4s"></div>
+                            </div>
+                        </div>
+                    </template>
+                </el-main>
+
+                <div class="input-footer">
+                    <el-row :gutter="10">
+                        <el-col :span="20">
+                            <el-input
+                                ref="messageInput"
+                                v-model="inputMessage"
+                                type="textarea"
+                                :rows="2"
+                                :disabled="!apiKey"
+                                placeholder="输入你的消息..."
+                                @keyup.enter="sendMessage"
+                            ></el-input>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-button
+                                type="primary"
+                                style="height: 100%; width: 100%"
+                                :loading="isLoading"
+                                :disabled="!apiKey"
+                                @click="sendMessage"
+                            >
+                                发送
+                            </el-button>
+                        </el-col>
+                    </el-row>
+                    <el-alert
+                        v-if="errorMessage"
+                        :title="errorMessage"
+                        type="error"
+                        show-icon
+                        style="margin-top: 10px"
+                    ></el-alert>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置抽屉 -->
+        <el-drawer
+            v-model="showSettings"
+            title="设置"
+            direction="rtl"
+            size="80%"
+            :destroy-on-close="false"
+        >
+            <div class="settings-drawer">
+                <el-form>
+                    <div class="api-key-input">
+                        <el-form-item label="API Key">
+                            <el-input
+                                v-model="apiKey"
+                                type="password"
+                                placeholder="请输入您的API Key"
+                                show-password
+                                @input="saveApiKey"
+                            ></el-input>
+                            <div style="margin-top: 5px; color: #666; font-size: 12px;">
+                                API Key将安全地存储在您的浏览器中
+                            </div>
+                        </el-form-item>
+                    </div>
+                    <el-form-item label="选择模型">
+                        <el-select v-model="model" style="width: 100%" placeholder="选择模型">
+                            <el-option
+                                v-for="item in models"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-drawer>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        // 创建应用实例
+        const app = createApp({
+            data() {
+                return {
+                    messages: [],
+                    inputMessage: '',
+                    model: 'deepseek-ai/DeepSeek-R1',
+                    models: [
+                        'deepseek-ai/DeepSeek-R1',
+                        'deepseek-ai/DeepSeek-V3',
+                        'meta-llama/Llama-3.3-70B-Instruct'
+                    ],
+                    isLoading: false,
+                    isTyping: false,
+                    errorMessage: '',
+                    apiKey: localStorage.getItem('deepseek_api_key') || '',
+                    showSettings: false,
+                    showSidebar: false,
+                    chatHistory: [],
+                    currentChatId: null
+                }
+            },
+            computed: {
+                currentChat() {
+                    return this.chatHistory.find(chat => chat.id === this.currentChatId)
+                }
+            },
+            created() {
+                // 从localStorage加载聊天历史
+                const savedHistory = localStorage.getItem('chat_history')
+                if (savedHistory) {
+                    this.chatHistory = JSON.parse(savedHistory)
+                    if (this.chatHistory.length > 0) {
+                        this.currentChatId = this.chatHistory[0].id
+                    }
+                }
+                
+                if (!this.currentChatId) {
+                    this.createNewChat()
+                }
+            },
+            methods: {
+                saveApiKey() {
+                    localStorage.setItem('deepseek_api_key', this.apiKey)
+                },
+                createNewChat() {
+                    const newChat = {
+                        id: Date.now(),
+                        title: '新对话',
+                        messages: []
+                    }
+                    this.chatHistory.unshift(newChat)
+                    this.currentChatId = newChat.id
+                    this.saveChatHistory()
+                    this.showSidebar = false
+                },
+                switchChat(chatId) {
+                    this.currentChatId = chatId
+                    this.showSidebar = false
+                },
+                deleteChat(chatId) {
+                    const index = this.chatHistory.findIndex(chat => chat.id === chatId)
+                    if (index !== -1) {
+                        this.chatHistory.splice(index, 1)
+                        if (this.chatHistory.length === 0) {
+                            this.createNewChat()
+                        } else {
+                            this.currentChatId = this.chatHistory[0].id
+                        }
+                        this.saveChatHistory()
+                    }
+                },
+                saveChatHistory() {
+                    localStorage.setItem('chat_history', JSON.stringify(this.chatHistory))
+                },
+                focusInput() {
+                    this.$refs.messageInput.focus()
+                },
+                updateChatTitle(message) {
+                    if (!this.currentChat.title || this.currentChat.title === '新对话') {
+                        this.currentChat.title = message.slice(0, 20) + (message.length > 20 ? '...' : '')
+                        this.saveChatHistory()
+                    }
+                },
+                toggleReasoning(index) {
+                    this.currentChat.messages[index].isReasoningCollapsed = 
+                        !this.currentChat.messages[index].isReasoningCollapsed;
+                    this.saveChatHistory();
+                },
+                async sendMessage() {
+                    if (!this.inputMessage.trim() || this.isLoading || !this.apiKey) return
+
+                    const message = this.inputMessage.trim()
+                    this.inputMessage = ''
+                    this.updateChatTitle(message)
+
+                    try {
+                        this.isLoading = true
+                        this.isTyping = true
+                        this.errorMessage = ''
+
+                        // 添加用户消息
+                        const userMessage = {
+                            role: 'user',
+                            content: message
+                        }
+                        this.currentChat.messages.push(userMessage)
+
+                        // 打印请求详情
+                        const requestBody = {
+                            model: this.model,
+                            messages: this.currentChat.messages.map(msg => ({
+                                role: msg.role,
+                                content: msg.content
+                            })),
+                            stream: true,
+                            temperature: 0.7,
+                            max_tokens: 20000
+                        }
+
+                        console.log('发送请求到 API:', {
+                            url: 'https://api.siliconflow.cn/v1/chat/completions',
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${this.apiKey.substring(0, 8)}...`
+                            },
+                            body: requestBody
+                        })
+
+                        const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${this.apiKey}`
+                            },
+                            body: JSON.stringify(requestBody)
+                        })
+
+                        console.log('API 响应状态:', {
+                            status: response.status,
+                            statusText: response.statusText,
+                            headers: Object.fromEntries(response.headers.entries())
+                        })
+
+                        if (!response.ok) {
+                            const errorBody = await response.text()
+                            console.error('API 错误响应体:', errorBody)
+                            throw new Error(`API请求失败: ${response.status} - ${errorBody}`)
+                        }
+
+                        // 添加初始助手消息
+                        const assistantMessage = {
+                            role: 'assistant',
+                            content: '',
+                            reasoning_content: '',
+                            isReasoningCollapsed: false
+                        }
+                        this.currentChat.messages.push(assistantMessage)
+
+                        const reader = response.body.getReader()
+                        const decoder = new TextDecoder()
+
+                        console.log('开始读取流式响应...')
+                        while (true) {
+                            const { done, value } = await reader.read()
+                            if (done) {
+                                console.log('流式响应结束')
+                                break
+                            }
+
+                            const chunk = decoder.decode(value)
+                            console.log('收到数据块:', chunk)
+                            const lines = chunk.split('\n').filter(line => line.trim())
+
+                            for (const line of lines) {
+                                if (line === 'data: [DONE]') {
+                                    console.log('收到结束标记')
+                                    break
+                                }
+                                try {
+                                    const data = JSON.parse(line.replace('data: ', ''))
+                                    console.log('解析的数据:', data)
+                                    const currentMessage = this.currentChat.messages[this.currentChat.messages.length - 1]
+                                    
+                                    // 处理 reasoning_content
+                                    if (data.choices[0]?.delta?.reasoning_content !== undefined) {
+                                        currentMessage.reasoning_content += data.choices[0].delta.reasoning_content || ''
+                                    }
+                                    
+                                    // 处理普通 content
+                                    if (data.choices[0]?.delta?.content !== null && data.choices[0]?.delta?.content !== undefined) {
+                                        currentMessage.content += data.choices[0].delta.content || ''
+                                    }
+
+                                    // 强制更新视图
+                                    this.currentChat.messages = [...this.currentChat.messages]
+                                } catch (error) {
+                                    console.error('数据解析错误:', error, '原始数据:', line)
+                                }
+                            }
+                        }
+
+                        this.saveChatHistory()
+                    } catch (error) {
+                        console.error('完整错误信息:', error)
+                        this.errorMessage = `请求失败: ${error.message}`
+                        this.currentChat.messages.pop() // 移除未完成的助手消息
+                    } finally {
+                        this.isLoading = false
+                        this.isTyping = false
+                        this.$nextTick(() => {
+                            const container = document.querySelector('.message-list')
+                            container.scrollTop = container.scrollHeight
+                        })
+                    }
+                },
+                renderMarkdown(content) {
+                    if (!content) return '';
+                    try {
+                        // 检查 marked 是否已初始化
+                        if (!window.markedInitialized) {
+                            console.warn('等待 marked 初始化...');
+                            return content;
+                        }
+                        // 使用 marked.parse 而不是直接调用 marked
+                        return marked.parse(content);
+                    } catch (error) {
+                        console.error('Markdown 渲染错误:', error);
+                        return content;
+                    }
+                }
+            }
+        })
+
+        // 确保 ElementPlusIconsVue 已定义
+        if (typeof ElementPlusIconsVue === 'undefined') {
+            console.error('Element Plus Icons not loaded')
+        } else {
+            // 注册所有图标组件
+            for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+                app.component(key, component)
+            }
+        }
+
+        // 使用 Element Plus
+        app.use(ElementPlus)
+
+        // 挂载应用
+        app.mount('#app')
+    </script>
+</body>
+</html>
