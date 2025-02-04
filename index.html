@@ -534,32 +534,65 @@
             margin-top: 0.5em;    /* 调整代码块与文本之间的间距 */
         }
 
-        /* 移动端输入框优化 */
+        /* 修改移动端输入框样式 */
         @media (max-width: 768px) {
-            .input-footer {
-                position: sticky;
-                bottom: 0;
-                background: rgba(30, 41, 59, 0.9);
-                padding: 10px;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                z-index: 10;
+            /* 确保主内容区域可以滚动且不被输入框遮挡 */
+            .main-content {
+                position: relative;
+                height: 100vh;
+                height: -webkit-fill-available; /* 适配 iOS Safari */
+                display: flex;
+                flex-direction: column;
             }
 
+            /* 消息列表区域可滚动 */
+            .message-list {
+                flex: 1;
+                overflow-y: auto;
+                padding-bottom: 120px; /* 留出输入框的空间 */
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* 输入框固定在底部 */
+            .input-footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                padding: 10px;
+                border-top: 1px solid #e5e7eb;
+                z-index: 1000;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* 添加阴影效果 */
+            }
+
+            /* 处理软键盘弹出时的情况 */
+            @supports (-webkit-touch-callout: none) {
+                .main-content {
+                    padding-bottom: env(safe-area-inset-bottom);
+                }
+                
+                .input-footer {
+                    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+                }
+            }
+
+            /* 输入框样式优化 */
             .el-textarea__inner {
                 min-height: 44px !important;
                 line-height: 1.5;
-                font-size: 16px !important; /* 防止iOS自动缩放 */
+                font-size: 16px !important;
                 padding: 10px 12px;
-                background: #0f172a !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                color: #e2e8f0 !important;
+                background: #ffffff !important;
+                border: 1px solid #e5e7eb !important;
+                color: #1f2937 !important;
                 border-radius: 12px !important;
                 transition: all 0.3s ease;
             }
 
             .el-textarea__inner:focus {
-                border-color: #3b82f6 !important;
-                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+                border-color: #4096ff !important;
+                box-shadow: 0 0 0 2px rgba(64, 150, 255, 0.2) !important;
             }
 
             /* 发送按钮优化 */
@@ -568,10 +601,12 @@
                 padding: 0 15px;
                 font-size: 16px;
             }
+        }
 
-            /* 消息列表底部留白，防止被输入框遮挡 */
-            .message-list {
-                padding-bottom: 80px;
+        /* 针对不同屏幕尺寸优化输入框宽度 */
+        @media (min-width: 768px) {
+            .input-footer {
+                max-width: 1200px;
             }
         }
 
