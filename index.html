@@ -413,12 +413,107 @@
         }
 
         .footer {
-            padding: 16px;
-            text-align: center;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            font-size: 14px;
             color: #64748b;
-            font-size: 12px;
-            border-top: 1px solid #e2e8f0;
-            background: white;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-basic {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .divider {
+            color: #e5e7eb;
+        }
+
+        .author-link {
+            color: #4096ff;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .author-link:hover {
+            color: #1677ff;
+        }
+
+        .more-info-btn {
+            padding: 2px 4px;
+            color: #64748b !important;
+        }
+
+        .more-info-btn:hover {
+            color: #4096ff !important;
+        }
+
+        .author-dialog {
+            border-radius: 12px;
+        }
+
+        .author-info {
+            padding: 0 20px;
+        }
+
+        .author-info h3 {
+            margin: 0 0 16px;
+            color: #1f2937;
+            font-size: 18px;
+        }
+
+        .author-desc {
+            margin-bottom: 20px;
+            color: #4b5563;
+        }
+
+        .author-desc p {
+            margin: 8px 0;
+        }
+
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .social-link:hover {
+            background: #f1f5f9;
+            color: #4096ff;
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                padding: 10px;
+                font-size: 12px;
+            }
+            
+            .author-info {
+                padding: 0 10px;
+            }
+            
+            .social-links {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
         }
 
         /* Markdown 内容样式优化 */
@@ -1057,6 +1152,55 @@
                 </el-form>
             </div>
         </el-drawer>
+
+        <!-- 在 input-footer 后添加 footer -->
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-basic">
+                    <span>© 2025 DeepSeek伴侣</span>
+                    <span class="divider">|</span>
+                    <span>by <a href="https://www.huasheng.ai" target="_blank" class="author-link">AI进化论-花生</a></span>
+                    <el-button type="text" @click="showAuthorInfo = true" class="more-info-btn">
+                        <el-icon><InfoFilled /></el-icon>
+                    </el-button>
+                </div>
+            </div>
+
+            <!-- 作者信息弹窗 -->
+            <el-dialog
+                v-model="showAuthorInfo"
+                title="关于作者"
+                width="90%"
+                :max-width="500"
+                class="author-dialog"
+            >
+                <div class="author-info">
+                    <h3>花生 (AI进化论-花生)</h3>
+                    <div class="author-desc">
+                        <p>AI Native Coder｜第一代不会写代码的独立开发者</p>
+                        <p>AppStore 付费榜 Top1「小猫补光灯」开发者</p>
+                        <p>10万+粉AI博主</p>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://www.youtube.com/@alchain" target="_blank" class="social-link">
+                            <el-icon><VideoCamera /></el-icon> YouTube
+                        </a>
+                        <a href="https://space.bilibili.com/14097567" target="_blank" class="social-link">
+                            <el-icon><VideoPlay /></el-icon> Bilibili
+                        </a>
+                        <a href="https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf" target="_blank" class="social-link">
+                            <el-icon><Picture /></el-icon> 小红书
+                        </a>
+                        <a href="https://x.com/AlchainHust" target="_blank" class="social-link">
+                            <el-icon><Message /></el-icon> Twitter
+                        </a>
+                        <div class="social-link">
+                            <el-icon><ChatDotRound /></el-icon> 微信公众号：花叔
+                        </div>
+                    </div>
+                </div>
+            </el-dialog>
+        </div>
     </div>
 
     <script>
@@ -1081,7 +1225,8 @@
                     showSettings: false,
                     showSidebar: false,
                     chatHistory: [],
-                    currentChatId: null
+                    currentChatId: null,
+                    showAuthorInfo: false
                 }
             },
             computed: {

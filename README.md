@@ -78,6 +78,25 @@ DeepSeek 伴侣是一个轻量级的 AI 对话网页应用，旨在解决 DeepSe
 
 © 2025 All Rights Reserved
 
+## 关于作者
+
+**花生 (AI进化论-花生)**
+- AI Native Coder｜第一代不会写代码的独立开发者
+- AppStore 付费榜 Top1「小猫补光灯」开发者
+- 10万+粉AI博主
+- 微软｜LinkedIn AI课程讲师
+- 全球旅居中...66%的数字游民
+
+### 关注我
+- YouTube: [AI进化论-花生](https://www.youtube.com/@alchain)
+- Bilibili: [AI进化论-花生](https://space.bilibili.com/14097567)
+- 小红书: [AI进化论-花生](https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf)
+- X(Twitter): [@huasheng_ai](https://x.com/AlchainHust)
+- 微信公众号: 花叔
+
+### 个人主页
+[huasheng.ai](https://www.huasheng.ai)
+
 ---
 
 > 🎯 **即刻开始**: 打开网页，填入 API Key，享受流畅的 AI 对话体验！ 
