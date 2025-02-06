@@ -919,6 +919,51 @@
         .header-actions .el-button {
             color: #1f2937 !important;
         }
+
+        .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-links {
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            background: #f8fafc;
+        }
+
+        .links-title {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-link:hover {
+            background: #e5e7eb;
+            color: #4096ff;
+        }
+
+        .sidebar-link .el-icon {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -946,6 +991,31 @@
                             <el-icon><Delete /></el-icon>
                         </el-button>
                     </div>
+                </div>
+                
+                <!-- 添加链接区域 -->
+                <div class="sidebar-links">
+                    <div class="links-title">相关链接</div>
+                    <a href="https://github.com/alchaincyf/deepchat" target="_blank" class="sidebar-link">
+                        <el-icon><Platform /></el-icon>
+                        GitHub 仓库
+                    </a>
+                    <a href="https://www.huasheng.ai" target="_blank" class="sidebar-link">
+                        <el-icon><User /></el-icon>
+                        作者主页
+                    </a>
+                    <a href="https://t.zsxq.com/BFTPI" target="_blank" class="sidebar-link">
+                        <el-icon><Connection /></el-icon>
+                        AI编程知识星球
+                    </a>
+                    <a href="https://www.img2046.com" target="_blank" class="sidebar-link">
+                        <el-icon><Magic /></el-icon>
+                        AI文生图
+                    </a>
+                    <a href="https://www.bookai.top/deepseek/tips" target="_blank" class="sidebar-link">
+                        <el-icon><Reading /></el-icon>
+                        学习 DeepSeek
+                    </a>
                 </div>
             </div>
 
@@ -1215,6 +1285,7 @@
                     model: 'deepseek-ai/DeepSeek-R1',
                     models: [
                         'deepseek-ai/DeepSeek-R1',
+                        'deepseek-ai/DeepSeek-V3',
                         'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
                         'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
                         'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
