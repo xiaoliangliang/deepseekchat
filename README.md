@@ -72,7 +72,7 @@ deepseek助手是一个轻量级的 AI 对话网页应用，旨在解决 DeepSee
 
 ## 贡献者
 
-- AI产品经理-靓仔 (项目发起人)
+- AI产品经理-靓仔
 
 ## 许可说明
 
@@ -82,21 +82,11 @@ deepseek助手是一个轻量级的 AI 对话网页应用，旨在解决 DeepSee
 
 **靓仔 (AI产品经理-靓仔)**
 - AI Native Coder｜第一代不会写代码的独立开发者
-- AppStore 付费榜 Top1「小猫补光灯」开发者
-- 10万+粉AI博主
-- 微软｜LinkedIn AI课程讲师
-- 全球旅居中...66%的数字游民
+- 目标管理神器微信小程序「元气目标锁屏」开发者
+
 
 ### 关注我
-- YouTube: [AI产品经理-靓仔](https://www.youtube.com/@alchain)
-- Bilibili: [AI产品经理-靓仔](https://space.bilibili.com/14097567)
-- 小红书: [AI产品经理-靓仔](https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf)
-- X(Twitter): [@huasheng_ai](https://x.com/AlchainHust)
-- 微信公众号: 靓仔说
-
-### 个人主页
-[huasheng.ai](https://www.huasheng.ai)
-
----
+- 小红书: AI独立开发-靓仔
+- 微信公众号: 靓仔AI
 
 > 🎯 **即刻开始**: 打开网页，填入 API Key，享受 deepseek助手的流畅对话体验！ 
