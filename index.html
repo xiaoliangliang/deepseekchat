@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepSeek伴侣 - AI进化论-花生 出品</title>
+    <title>deepseek助手 - AI产品经理-靓仔 出品</title>
     
     <!-- 添加 favicon -->
     <link rel="icon" type="image/svg+xml" href="logo.svg">
@@ -327,7 +327,6 @@
         .chat-list {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
         }
 
         .chat-item {
@@ -964,6 +963,36 @@
         .sidebar-link .el-icon {
             font-size: 16px;
         }
+
+        /* 添加二维码悬浮样式 */
+        .author-link-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .qrcode-popup {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            margin-bottom: 10px;
+            z-index: 1000;
+        }
+
+        .author-link-container:hover .qrcode-popup {
+            display: block;
+        }
+
+        .qrcode-popup img {
+            width: 150px;
+            height: 150px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -992,31 +1021,6 @@
                         </el-button>
                     </div>
                 </div>
-                
-                <!-- 添加链接区域 -->
-                <div class="sidebar-links">
-                    <div class="links-title">相关链接</div>
-                    <a href="https://github.com/alchaincyf/deepchat" target="_blank" class="sidebar-link">
-                        <el-icon><Platform /></el-icon>
-                        GitHub 仓库
-                    </a>
-                    <a href="https://www.huasheng.ai" target="_blank" class="sidebar-link">
-                        <el-icon><User /></el-icon>
-                        作者主页
-                    </a>
-                    <a href="https://t.zsxq.com/BFTPI" target="_blank" class="sidebar-link">
-                        <el-icon><Connection /></el-icon>
-                        AI编程知识星球
-                    </a>
-                    <a href="https://www.img2046.com" target="_blank" class="sidebar-link">
-                        <el-icon><Magic /></el-icon>
-                        AI文生图
-                    </a>
-                    <a href="https://www.bookai.top/deepseek/tips" target="_blank" class="sidebar-link">
-                        <el-icon><Reading /></el-icon>
-                        学习 DeepSeek
-                    </a>
-                </div>
             </div>
 
             <!-- 移动端遮罩 -->
@@ -1033,7 +1037,7 @@
                     </button>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <img src="logo.svg" alt="Logo" style="width: 24px; height: 24px;">
-                        <h2>DeepSeek伴侣</h2>
+                        <h2>deepseek助手</h2>
                     </div>
                     <div class="header-actions">
                         <el-button type="text" @click="exportToPDF" :disabled="!currentChat?.messages?.length">
@@ -1060,7 +1064,7 @@
                                     <div style="color: #4b5563; line-height: 1.6;">
                                         请前往
                                         <a 
-                                            href='https://cloud.siliconflow.cn/i/FuAPK085' 
+                                            href='https://cloud.siliconflow.cn/i/orHbMPbM' 
                                             target='_blank'
                                             style="color: #4096ff; text-decoration: none;"
                                             onmouseover="this.style.textDecoration='underline'"
@@ -1227,9 +1231,16 @@
         <div class="footer">
             <div class="footer-content">
                 <div class="footer-basic">
-                    <span>© 2025 DeepSeek伴侣</span>
+                    <span>© 2025 deepseek助手</span>
                     <span class="divider">|</span>
-                    <span>by <a href="https://www.huasheng.ai" target="_blank" class="author-link">AI进化论-花生</a></span>
+                    <span>by 
+                        <span class="author-link-container">
+                            <span class="author-link">AI产品经理-靓仔</span>
+                            <div class="qrcode-popup">
+                                <img src="qrcode.jpg" alt="公众号二维码">
+                            </div>
+                        </span>
+                    </span>
                     <el-button type="text" @click="showAuthorInfo = true" class="more-info-btn">
                         <el-icon><InfoFilled /></el-icon>
                     </el-button>
@@ -1245,7 +1256,7 @@
                 class="author-dialog"
             >
                 <div class="author-info">
-                    <h3>花生 (AI进化论-花生)</h3>
+                    <h3>靓仔 (AI产品经理-靓仔)</h3>
                     <div class="author-desc">
                         <p>AI Native Coder｜第一代不会写代码的独立开发者</p>
                         <p>AppStore 付费榜 Top1「小猫补光灯」开发者</p>

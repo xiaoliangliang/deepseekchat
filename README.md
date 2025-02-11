@@ -1,8 +1,8 @@
-# DeepSeek 伴侣
+# deepseek助手
 
-DeepSeek 伴侣是一个轻量级的 AI 对话网页应用，旨在解决 DeepSeek 官网经常出现繁忙的问题。通过调用硅基流动提供的 API 接口，让用户可以稳定、快速地使用 DeepSeek 的强大能力。
+deepseek助手是一个轻量级的 AI 对话网页应用，旨在解决 DeepSeek 官网经常出现繁忙的问题。通过调用硅基流动提供的 API 接口，让用户可以稳定、快速地使用 DeepSeek 的强大能力。
 
-## 为什么选择 DeepSeek 伴侣？
+## 为什么选择 deepseek助手？
 
 - 🚀 **稳定可靠**: 通过硅基流动的 API 服务，避免官网的拥堵问题
 - 💰 **成本低廉**: 新用户注册即可获得 2000 万 tokens 的免费额度
@@ -11,9 +11,9 @@ DeepSeek 伴侣是一个轻量级的 AI 对话网页应用，旨在解决 DeepSe
 
 ## 开始使用
 
-1. 访问 [硅基流动](https://cloud.siliconflow.cn/i/FuAPK085) 注册账号
+1. 访问 [硅基流动](https://cloud.siliconflow.cn/i/orHbMPbM) 注册账号
 2. 获取免费的 API Key
-3. 打开 DeepSeek 伴侣网页
+3. 打开 deepseek助手网页
 4. 配置 API Key 开始对话
 
 ## 支持的模型
@@ -72,7 +72,7 @@ DeepSeek 伴侣是一个轻量级的 AI 对话网页应用，旨在解决 DeepSe
 
 ## 贡献者
 
-- AI进化论-花生 (项目发起人)
+- AI产品经理-靓仔 (项目发起人)
 
 ## 许可说明
 
@@ -80,7 +80,7 @@ DeepSeek 伴侣是一个轻量级的 AI 对话网页应用，旨在解决 DeepSe
 
 ## 关于作者
 
-**花生 (AI进化论-花生)**
+**靓仔 (AI产品经理-靓仔)**
 - AI Native Coder｜第一代不会写代码的独立开发者
 - AppStore 付费榜 Top1「小猫补光灯」开发者
 - 10万+粉AI博主
@@ -88,15 +88,15 @@ DeepSeek 伴侣是一个轻量级的 AI 对话网页应用，旨在解决 DeepSe
 - 全球旅居中...66%的数字游民
 
 ### 关注我
-- YouTube: [AI进化论-花生](https://www.youtube.com/@alchain)
-- Bilibili: [AI进化论-花生](https://space.bilibili.com/14097567)
-- 小红书: [AI进化论-花生](https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf)
+- YouTube: [AI产品经理-靓仔](https://www.youtube.com/@alchain)
+- Bilibili: [AI产品经理-靓仔](https://space.bilibili.com/14097567)
+- 小红书: [AI产品经理-靓仔](https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf)
 - X(Twitter): [@huasheng_ai](https://x.com/AlchainHust)
-- 微信公众号: 花叔
+- 微信公众号: 靓仔说
 
 ### 个人主页
 [huasheng.ai](https://www.huasheng.ai)
 
 ---
 
-> 🎯 **即刻开始**: 打开网页，填入 API Key，享受流畅的 AI 对话体验！ 
+> 🎯 **即刻开始**: 打开网页，填入 API Key，享受 deepseek助手的流畅对话体验！ 
