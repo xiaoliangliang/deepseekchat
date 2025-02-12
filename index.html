@@ -948,6 +948,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            position: relative;
         }
 
         .chat-list {
@@ -1020,6 +1021,57 @@
             height: 150px;
             display: block;
         }
+
+        /* 添加广告卡片到侧边栏底部 */
+        .ad-card {
+            position: relative;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 15px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            width: calc(100% - 30px); /* 确保卡片宽度考虑到margin */
+            box-sizing: border-box; /* 确保padding和border包含在宽度内 */
+        }
+
+        .ad-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .ad-card a {
+            text-decoration: none;
+            color: #1f2937;
+            display: block;
+            width: 100%; /* 确保链接占满容器 */
+        }
+
+        .ad-card-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #4b5563;
+            margin-bottom: 12px;
+            word-wrap: break-word; /* 确保文字换行 */
+        }
+
+        .ad-button {
+            display: block; /* 改为block以确保宽度正确 */
+            background: #4096ff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box; /* 确保padding包含在宽度内 */
+        }
+
+        .ad-button:hover {
+            background: #1677ff;
+        }
     </style>
 </head>
 <body>
@@ -1027,25 +1079,38 @@
         <div class="app-container">
             <!-- 侧边栏 -->
             <div class="sidebar" :class="{ show: showSidebar }">
-                <div class="sidebar-header">
-                    <el-button type="primary" style="width: 100%" @click="createNewChat">
-                        <el-icon><Plus /></el-icon> 新对话
-                    </el-button>
-                </div>
-                <div class="chat-list">
-                    <div v-for="chat in chatHistory" 
-                         :key="chat.id" 
-                         class="chat-item"
-                         :class="{ active: currentChatId === chat.id }"
-                         @click="switchChat(chat.id)">
-                        <el-icon><ChatRound /></el-icon>
-                        <span class="chat-item-title">{{ chat.title || '新对话' }}</span>
-                        <el-button 
-                            v-if="currentChatId === chat.id"
-                            type="text"
-                            @click.stop="deleteChat(chat.id)">
-                            <el-icon><Delete /></el-icon>
+                <div class="sidebar-content">
+                    <div class="sidebar-header">
+                        <el-button type="primary" style="width: 100%" @click="createNewChat">
+                            <el-icon><Plus /></el-icon> 新对话
                         </el-button>
+                    </div>
+                    <div class="chat-list">
+                        <div v-for="chat in chatHistory" 
+                             :key="chat.id" 
+                             class="chat-item"
+                             :class="{ active: currentChatId === chat.id }"
+                             @click="switchChat(chat.id)">
+                            <el-icon><ChatRound /></el-icon>
+                            <span class="chat-item-title">{{ chat.title || '新对话' }}</span>
+                            <el-button 
+                                v-if="currentChatId === chat.id"
+                                type="text"
+                                @click.stop="deleteChat(chat.id)">
+                                <el-icon><Delete /></el-icon>
+                            </el-button>
+                        </div>
+                    </div>
+                    <!-- 广告卡片 -->
+                    <div class="ad-card" v-if="showAd">
+                        <a href="https://2233.ai/i/R4C0GFUA" target="_blank">
+                            <div class="ad-card-content">
+                                觉得deekseek还不够好用？我们可以试试其他大模型
+                            </div>
+                            <div class="ad-button">
+                                点击注册免费试用
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1376,7 +1441,8 @@
                     showSidebar: false,
                     chatHistory: [],
                     currentChatId: null,
-                    showAuthorInfo: false
+                    showAuthorInfo: false,
+                    showAd: true, // 默认显示广告
                 }
             },
             computed: {
@@ -1396,6 +1462,15 @@
                 
                 if (!this.currentChatId) {
                     this.createNewChat()
+                }
+
+                // 检查广告状态
+                const adClosed = localStorage.getItem('adClosed')
+                this.showAd = adClosed !== 'true'
+                
+                // 确保广告显示
+                if (this.showAd) {
+                    localStorage.removeItem('adClosed')
                 }
             },
             methods: {
@@ -1787,7 +1862,11 @@
                         }
                     }
                     return text.trim();
-                }
+                },
+                closeAd() {
+                    this.showAd = false
+                    localStorage.setItem('adClosed', 'true')
+                },
             }
         })
 
